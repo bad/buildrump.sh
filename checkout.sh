@@ -260,14 +260,14 @@ githubdate ()
 	hubdateonebranch usr user
 
 	${GIT} checkout appstack-src
-	${GIT} merge --no-edit kernel-src user-src
+	${GIT} merge --no-edit --allow-unrelated-histories kernel-src user-src
 
 	${GIT} checkout all-src
-	${GIT} merge --no-edit kernel-src user-src posix-src
+	${GIT} merge --no-edit --allow-unrelated-histories kernel-src user-src posix-src
 
 	# buildrump-src revision gets embedded in buildrump.sh
 	${GIT} checkout buildrump-src
-	${GIT} merge --no-edit kernel-src posix-src
+	${GIT} merge --no-edit --allow-unrelated-histories kernel-src posix-src
 	gitsrcrev=$(${GIT} rev-parse HEAD)
 
 	${GIT} checkout master
