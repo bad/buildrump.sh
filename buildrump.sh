@@ -98,7 +98,7 @@ diagout ()
 	else
 		shift
 	fi
-	${DIAGOUT} $*
+	[ $# ] && ${DIAGOUT} $@
 }
 
 #
@@ -262,7 +262,7 @@ doesitbuild ()
 	warnflags="-Wmissing-prototypes -Wstrict-prototypes -Wimplicit -Werror"
 	printf "${theprog}" \
 	    | ${CC} ${warnflags} ${EXTRA_LDFLAGS} ${EXTRA_CFLAGS}	\
-		-x c - -o /dev/null $* > /dev/null 2>&1
+		-x c - -o /dev/null ${1+"$@"} > /dev/null 2>&1
 }
 
 doesitbuild_host ()
@@ -272,7 +272,7 @@ doesitbuild_host ()
 	shift
 
 	printf "${theprog}" \
-	    | ${HOST_CC} -Wall -Werror -x c - -o /dev/null $* > /dev/null 2>&1
+	    | ${HOST_CC} -Wall -Werror -x c - -o /dev/null ${1+"$@"} > /dev/null 2>&1
 }
 
 # like doesitbuild, except with c++
@@ -286,7 +286,7 @@ doesitcxx ()
 
 	printf "${theprog}" \
 	    | ${CXX} -Werror ${EXTRA_LDFLAGS} ${EXTRA_CFLAGS}	\
-		-x c++ - -o /dev/null $* > /dev/null 2>&1
+		-x c++ - -o /dev/null ${1+"$@"} > /dev/null 2>&1
 }
 
 checkcheckout ()
@@ -357,7 +357,6 @@ probe_rumpuserbits ()
 
 	if [ ! -f ${BRTOOLDIR}/autoconf/rumpuser_config.h ]; then
 		diagout '>> running librumpuser configure script'
-		diagout
 		mkdir -p ${BRTOOLDIR}/autoconf
 		( export CFLAGS="${EXTRA_CFLAGS}"
 		  export LDFLAGS="${EXTRA_LDFLAGS}"
@@ -1606,7 +1605,7 @@ domake ()
 	mktarget=${1}; shift
 
 	[ ! -x ${RUMPMAKE} ] && die "No rumpmake (${RUMPMAKE}). Forgot tools?"
-	${RUMPMAKE} $* -j ${JNUM} -f ${mkfile} ${mktarget}
+	${RUMPMAKE} ${1+"@"} -j ${JNUM} -f ${mkfile} ${mktarget}
 	[ $? -eq 0 ] || die "make $mkfile $mktarget"
 }
 
