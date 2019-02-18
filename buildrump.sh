@@ -315,6 +315,15 @@ checkcompiler ()
 		fi
 	fi
 
+	# Does the compiler support -Wno-error=frame-address?
+	# gcc 6? Used for x86 mcount.c in lib/libc/gmon/Makefile.inc
+	doesitbuild 'int main(void) {return 0;}\n' -c \
+		    -Wno-error=frame-address
+	if [ $? -ne 0 ]; then
+		appendvar_fs CCWRAPPER_MANGLE : \
+			     "-Wno-error=frame-address"
+	fi
+
 	if ! ${KERNONLY}; then
 		doesitbuild 'int main(void) {return 0;}\n' \
 		    ${EXTRA_RUMPUSER} ${EXTRA_RUMPCOMMON}
