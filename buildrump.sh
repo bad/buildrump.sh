@@ -302,27 +302,27 @@ checkcheckout ()
 	fi
 }
 
+checkcompilerflag ()
+{
+	doesitbuild 'int main(void) {return 0;}\n' -c \
+		    "$1"
+	if [ $? -ne 0 ]; then
+		appendvar_fs CCWRAPPER_MANGLE : \
+			     "$1"
+	fi
+}
+
 checkcompiler ()
 {
 
 	# Iron out the clang version differences.
 	if [ "${CC_FLAVOR}" = 'clang' ]; then
-		doesitbuild 'int main(void) {return 0;}\n' -c \
-			-Wtautological-pointer-compare
-		if [ $? -ne 0 ]; then
-			appendvar_fs CCWRAPPER_MANGLE : \
-				"-Wno-error=tautological-pointer-compare -Wno-error=tautological-compare"
-		fi
+		checkcompilerflag -Wtautological-pointer-compare
 	fi
 
 	# Does the compiler support -Wno-error=frame-address?
 	# gcc 6? Used for x86 mcount.c in lib/libc/gmon/Makefile.inc
-	doesitbuild 'int main(void) {return 0;}\n' -c \
-		    -Wno-error=frame-address
-	if [ $? -ne 0 ]; then
-		appendvar_fs CCWRAPPER_MANGLE : \
-			     "-Wno-error=frame-address"
-	fi
+	checkcompilerflag -Wno-error=frame-address
 
 	if ! ${KERNONLY}; then
 		doesitbuild 'int main(void) {return 0;}\n' \
