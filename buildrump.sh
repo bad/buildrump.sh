@@ -324,6 +324,9 @@ checkcompiler ()
 	# gcc 6? Used for x86 mcount.c in lib/libc/gmon/Makefile.inc
 	checkcompilerflag -Wno-error=frame-address
 
+	# Does the compiler support -Wimplicit-fallthrough?
+	checkcompilerflag -Wno-error=implicit-fallthrough
+
 	if ! ${KERNONLY}; then
 		doesitbuild 'int main(void) {return 0;}\n' \
 		    ${EXTRA_RUMPUSER} ${EXTRA_RUMPCOMMON}
