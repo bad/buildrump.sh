@@ -327,6 +327,9 @@ checkcompiler ()
 	# Does the compiler support -Wimplicit-fallthrough?
 	checkcompilerflag -Wno-error=implicit-fallthrough
 
+	# Does the compiler support -Wno-error=format-truncation
+	checkcompilerflag -Wno-error=format-truncation
+
 	if ! ${KERNONLY}; then
 		doesitbuild 'int main(void) {return 0;}\n' \
 		    ${EXTRA_RUMPUSER} ${EXTRA_RUMPCOMMON}
