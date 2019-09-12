@@ -126,12 +126,16 @@ checkoutcvs ()
 	# squelch .cvspass whine
 	export CVS_PASSFILE=/dev/null
 
-	# we need listsrcdirs
+	# we need listsrcdirs and headerlist
 	echo ">> Fetching the list of files we need to checkout ..."
-	${CVS} ${NBSRC_CVSFLAGS} -d ${BUILDRUMP_CVSROOT} co -p \
-	    ${NBSRC_CVSPARAM} ${NBSRC_CVSLISTREV:+"${NBSRC_CVSLISTREV}"} \
-	    src/sys/rump/listsrcdirs > listsrcdirs 2>/dev/null \
-	      || die listsrcdirs checkout failed
+	for f in src/sys/rump/listsrcdirs src/tools/headerlist ; do
+		bn="`basename ${f}`"
+		${CVS} ${NBSRC_CVSFLAGS} -d ${BUILDRUMP_CVSROOT} co -p \
+		       ${NBSRC_CVSPARAM} \
+		       ${NBSRC_CVSLISTREV:+"${NBSRC_CVSLISTREV}"} \
+		       "${f}" > "${bn}" 2>/dev/null \
+			|| die "${bn}" checkout failed
+	done
 
 	# trick cvs into "skipping" the module name so that we get
 	# all the sources directly into $SRCDIR
@@ -169,7 +173,7 @@ checkoutcvs ()
 
 	# remove the symlink used to trick cvs
 	rm -f src
-	rm -f listsrcdirs
+	rm -f listsrcdirs headerlist
 }
 
 # Check out sources via git.  If there's already a git repo in the
