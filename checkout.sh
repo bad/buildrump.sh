@@ -208,7 +208,7 @@ hubdateonebranch ()
 	rm -rf *
 	checkoutcvs export ${exportname}
 	echo ">> adding files to the \"${branchbase}-src-clean\" branch"
-	${GIT} add -A
+	${GIT} add -A --force	# use force to ignore .gitignore files in CVS
 
 	if [ -z "$(${GIT} status --porcelain)" ]; then
 		echo ">> no changes to \"${branchbase}\""
