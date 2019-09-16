@@ -154,6 +154,9 @@ appendvar ()
 }
 
 #
+# Since r1.12 of share/mk/bsd.gcc.mk _GCC_CRT* and _GCC_LIBGCCDIR
+# are no longer set to the values expected by EXTERNAL_TOOLCHAIN.
+#
 # Not all platforms have  the same set of crt files.  for some
 # reason unbeknownst to me, if the file does not exist,
 # at least gcc --print-file-name just echoes the input parameter.
@@ -163,8 +166,22 @@ chkcrt ()
 {
 	tst=`${CC} --print-file-name=crt${1}.o`
 	up=`echo ${1} | tr [a-z] [A-Z]`
-	[ -z "${tst%crt${1}.o}" ] \
-	    && echo "_GCC_CRT${up}=" >>"${MKCONF}"
+	[ "${tst}" = "crt${1}.o" ] && tst=
+	echo "_GCC_CRT${up}=${tst}" >>"${MKCONF}"
+}
+
+# provide _GCC_CRTDIR
+chkcrtdir ()
+{
+	dir=$(dirname $(${CC} --print-file-name=crtbegin.o))
+	echo "_GCC_CRTDIR=${dir}" >>"${MKCONF}"
+}
+
+# provide _GCC_LIBGCCDIR
+chklibgccdir ()
+{
+	dir=$(dirname $(${CC} --print-libgcc-file-name))
+	echo "_GCC_LIBGCCDIR=${dir}" >>"${MKCONF}"
 }
 
 probeld ()
@@ -673,10 +690,14 @@ EOF
 	    "${EXTRA_CPPFLAGS}" "${RUMPKERN_UNDEF}"
 	exec 1>&3 3>&-
 
-	chkcrt begins
-	chkcrt ends
+	chkcrt begin
+	chkcrt beginS
+	chkcrt end
+	chkcrt endS
 	chkcrt i
 	chkcrt n
+	chkcrtdir
+	chklibgccdir
 
 	# add vars from env last (so that they can be used for overriding)
 	cat >> "${MKCONF}" << EOF
