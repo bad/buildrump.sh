@@ -263,15 +263,20 @@ githubdate ()
 	hubdateonebranch sys kernel
 	hubdateonebranch usr user
 
+	# NOTE that order of branch names is relevant.
+	# in git octopus merges deletions on a branch mentioned later supersede
+	# additions in an earlier branch.
+	# obey user-src -> posix-src -> kernel-src, so that directories can
+	# be moved from the former to the latter.
 	${GIT} checkout appstack-src
-	${GIT} merge --no-edit --allow-unrelated-histories kernel-src user-src
+	${GIT} merge --no-edit --allow-unrelated-histories user-src kernel-src
 
 	${GIT} checkout all-src
-	${GIT} merge --no-edit --allow-unrelated-histories kernel-src user-src posix-src
+	${GIT} merge --no-edit --allow-unrelated-histories user-src posix-src kernel-src
 
 	# buildrump-src revision gets embedded in buildrump.sh
 	${GIT} checkout buildrump-src
-	${GIT} merge --no-edit --allow-unrelated-histories kernel-src posix-src
+	${GIT} merge --no-edit --allow-unrelated-histories posix-src kernel-src
 	gitsrcrev=$(${GIT} rev-parse HEAD)
 
 	${GIT} checkout master
