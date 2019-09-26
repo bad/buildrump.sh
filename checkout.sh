@@ -227,7 +227,7 @@ hubdateonebranch ()
 	# point.  Since our tree should now be 100% the same as upstream,
 	# merge conflicts should be impossible.  Nevertheless, preserve the
 	# old code.
-	if ! ${GIT} merge --no-edit ${branchbase}-src-clean; then
+	if ! ${GIT} merge --no-edit -Xfind-renames=100% ${branchbase}-src-clean; then
 		echo '>> MERGE CONFLICT!'
 		echo '>> YOU ARE PROBABLY DOING SOMETHING WRONG!'
 		echo '>>'
