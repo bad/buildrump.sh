@@ -42,7 +42,7 @@
 # that once buildrump.sh is published, the NetBSD sources will be
 # available via git.
 #
-NBSRC_CVSDATE="2019-09-12 00:57 UTC"
+NBSRC_CVSDATE="2019-09-27 12:00 UTC"
 NBSRC_CVSFLAGS="-z3"
 
 # If set, timestamp for src/sys/rump/listsrcdir.  If unset,
