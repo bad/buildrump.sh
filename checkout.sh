@@ -60,7 +60,9 @@ NBSRC_EXTRA_sys=''
 
 NBSRC_EXTRA_posix=''
 
-NBSRC_EXTRA_usr=''
+NBSRC_EXTRA_usr='
+    20190928 1804UTC:
+        src/sbin/fsck/partutil.c'
 
 GITREPO='https://github.com/bad/src-netbsd'
 GITREPOPUSH='git@github.com:bad/src-netbsd'
