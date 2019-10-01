@@ -337,6 +337,8 @@ checkcompiler ()
 		checkcompilerflag -Wtautological-pointer-compare
 		# disable LibCallSimplifier with -fno-builtin
 		appendvar EXTRA_CFLAGS -fno-builtin
+		# disable lots of warnings in NetBSD inet/inet6 code
+		appendvar EXTRA_CFLAGS -Wno-address-of-packed-member
 	fi
 
 	# Does the compiler support -Wno-error=frame-address?
