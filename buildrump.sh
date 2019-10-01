@@ -335,6 +335,8 @@ checkcompiler ()
 	# Iron out the clang version differences.
 	if [ "${CC_FLAVOR}" = 'clang' ]; then
 		checkcompilerflag -Wtautological-pointer-compare
+		# disable LibCallSimplifier with -fno-builtin
+		appendvar EXTRA_CFLAGS -fno-builtin
 	fi
 
 	# Does the compiler support -Wno-error=frame-address?
